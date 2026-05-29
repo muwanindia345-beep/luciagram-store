@@ -170,43 +170,50 @@ function renderChannels() {
 }
 
 async function startDownload(channel) {
-  const release = channel === 'stable' ? stableRelease : betaRelease;
-  if (!release) return;
-  const apk = release.assets.find(a => a.name.endsWith('.apk'));
-  if (!apk) return;
-
   const wrap = document.getElementById(channel + '-progress-wrap');
   const bar = document.getElementById(channel + '-bar');
   const text = document.getElementById(channel + '-text');
   wrap.style.display = 'block';
+  bar.style.width = '0%';
+  text.textContent = 'Connecting...';
 
   try {
-    const response = await fetch(apk.browser_download_url);
-    const total = parseInt(response.headers.get('content-length') || apk.size);
+    const response = await fetch('/download/' + channel);
+    const total = parseInt(response.headers.get('content-length') || 0);
     const reader = response.body.getReader();
     let loaded = 0;
     const chunks = [];
+
+    bar.style.width = '5%';
+    text.textContent = 'Downloading...';
 
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
       chunks.push(value);
       loaded += value.length;
-      const pct = Math.round((loaded / total) * 100);
-      bar.style.width = pct + '%';
-      text.textContent = `Downloading... ${pct}% (${(loaded/1024/1024).toFixed(1)} MB)`;
+      if (total > 0) {
+        const pct = Math.min(Math.round((loaded / total) * 100), 99);
+        bar.style.width = pct + '%';
+        text.textContent = `Downloading... ${pct}% (${(loaded/1024/1024).toFixed(1)} MB)`;
+      } else {
+        text.textContent = `Downloading... ${(loaded/1024/1024).toFixed(1)} MB`;
+      }
     }
 
-    text.textContent = 'Installing...';
+    bar.style.width = '100%';
+    text.textContent = 'Saving file...';
     const blob = new Blob(chunks, { type: 'application/vnd.android.package-archive' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = apk.name;
+    a.download = 'LuciaGram-' + channel + '.apk';
     a.click();
-    text.textContent = '✅ Download complete!';
+    URL.revokeObjectURL(url);
+    text.textContent = '✅ Download complete! Check your downloads folder.';
   } catch (e) {
     text.textContent = '❌ Download failed. Try again.';
+    bar.style.width = '0%';
   }
 }
 
