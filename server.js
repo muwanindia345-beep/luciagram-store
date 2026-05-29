@@ -1,6 +1,10 @@
 const express = require('express');
 const app = express();
 
+const StoreUptimeBot = require('./uptimebot');
+const bot = new StoreUptimeBot();
+bot.start();
+
 app.use(express.static('public'));
 
 app.get('/api/releases', async (req, res) => {
@@ -16,9 +20,6 @@ app.get('/api/releases', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log('LuciaStore running on port ' + PORT));
 
 app.get('/download/:channel', async (req, res) => {
   try {
@@ -36,3 +37,10 @@ app.get('/download/:channel', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+app.get('/status', (req, res) => {
+  res.json({ app: 'LuciaStore', status: 'running', ...bot.getReport() });
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`✨ LuciaStore running on port ${PORT}`));
