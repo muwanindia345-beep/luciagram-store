@@ -193,10 +193,15 @@ function timeAgo(d) {
 
 function hasUpdate(channel, tag) {
   const saved = localStorage.getItem('dl_'+channel);
-  return saved && saved !== tag;
+  const savedTime = localStorage.getItem('dl_time_'+channel);
+  const release = channel === 'stable' ? stableRelease : betaRelease;
+  const releaseTime = release?.published_at ? new Date(release.published_at).getTime() : 0;
+  const downloadTime = savedTime ? parseInt(savedTime) : 0;
+  // Update available if: tag changed OR newer release published after last download
+  return saved && (saved !== tag || releaseTime > downloadTime);
 }
 function getBtn(channel, tag) {
-  if (!localStorage.getItem('dl_'+channel)) return { cls: channel===`stable`?'stable-btn':'beta-btn', text: channel==='stable'?'⬇ Download Stable':'🧪 Download Beta' };
+  if (!localStorage.getItem('dl_'+channel)) return { cls: channel==='stable'?'stable-btn':'beta-btn', text: channel==='stable'?'⬇ Download Stable':'🧪 Download Beta' };
   if (hasUpdate(channel, tag)) return { cls: 'update-btn', text: '🔄 Update Available!' };
   return { cls: channel==='stable'?'stable-btn':'beta-btn', text: '✅ Downloaded' };
 }
@@ -301,6 +306,7 @@ async function startDownload(channel, btn, tag) {
     a.href=url; a.download='LuciaGram-'+channel+'.apk'; a.click();
     URL.revokeObjectURL(url);
     localStorage.setItem('dl_'+channel, tag);
+    localStorage.setItem('dl_time_'+channel, Date.now().toString());
     text.textContent = '✅ Done! Check Downloads folder.';
     btn.disabled = false;
     btn.textContent = '✅ Downloaded';
