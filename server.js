@@ -85,3 +85,49 @@ app.listen(PORT, () => {
   console.log('📦 Repo:', REPO);
   console.log('🔑 GitHub Token:', !!process.env.GITHUB_TOKEN);
 });
+
+// ===== RATING SYSTEM =====
+const fs = require('fs');
+const RATINGS_FILE = './ratings.json';
+
+function loadRatings() {
+  try { return JSON.parse(fs.readFileSync(RATINGS_FILE)); }
+  catch { return { total: 0, count: 0 }; }
+}
+
+app.get('/api/rating', (req, res) => {
+  const r = loadRatings();
+  res.json({ avg: r.count > 0 ? (r.total / r.count).toFixed(1) : '0', count: r.count });
+});
+
+app.post('/api/rating', express.json(), (req, res) => {
+  const stars = parseInt(req.body.stars);
+  if (!stars || stars < 1 || stars > 5) return res.status(400).json({ error: 'Invalid' });
+  const r = loadRatings();
+  r.total += stars; r.count += 1;
+  fs.writeFileSync(RATINGS_FILE, JSON.stringify(r));
+  res.json({ avg: (r.total / r.count).toFixed(1), count: r.count });
+});
+
+// ===== RATING SYSTEM =====
+const fs = require('fs');
+const RATINGS_FILE = './ratings.json';
+
+function loadRatings() {
+  try { return JSON.parse(fs.readFileSync(RATINGS_FILE)); }
+  catch { return { total: 0, count: 0 }; }
+}
+
+app.get('/api/rating', (req, res) => {
+  const r = loadRatings();
+  res.json({ avg: r.count > 0 ? (r.total / r.count).toFixed(1) : '0', count: r.count });
+});
+
+app.post('/api/rating', express.json(), (req, res) => {
+  const stars = parseInt(req.body.stars);
+  if (!stars || stars < 1 || stars > 5) return res.status(400).json({ error: 'Invalid' });
+  const r = loadRatings();
+  r.total += stars; r.count += 1;
+  fs.writeFileSync(RATINGS_FILE, JSON.stringify(r));
+  res.json({ avg: (r.total / r.count).toFixed(1), count: r.count });
+});
