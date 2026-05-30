@@ -7,65 +7,57 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: #0a0a0f; color: #fff; font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
-
-  .header { background: linear-gradient(135deg, #1a0533, #0d0d1a); padding: 16px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #2a1550; position: sticky; top: 0; z-index: 100; }
-  .header-logo { width: 36px; height: 36px; background: linear-gradient(135deg, #7c3aed, #db2777); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; }
-  .header h1 { font-size: 1.3rem; background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-  .hero { background: linear-gradient(135deg, #1a0533 0%, #0d0d1a 100%); padding: 30px 20px; text-align: center; border-bottom: 1px solid #2a1550; }
-  .app-icon { width: 100px; height: 100px; border-radius: 24px; margin: 0 auto 14px; overflow: hidden; box-shadow: 0 8px 32px rgba(124,58,237,0.5); border: 2px solid #7c3aed; }
-  .app-icon img { width: 100%; height: 100%; object-fit: cover; }
-  .app-icon-fallback { width: 100%; height: 100%; background: linear-gradient(135deg, #4c1d95, #831843); display: flex; align-items: center; justify-content: center; font-size: 48px; }
-  .app-name { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .app-dev { color: #a855f7; font-size: 0.85rem; margin-top: 4px; }
-  .ratings { display: flex; justify-content: center; gap: 30px; margin-top: 18px; }
+  .header { background: rgba(10,10,15,0.92); backdrop-filter: blur(20px); padding: 14px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.07); position: sticky; top: 0; z-index: 100; }
+  .header-logo { width: 34px; height: 34px; background: linear-gradient(135deg, #7c3aed, #db2777); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 17px; }
+  .header h1 { font-size: 1.2rem; background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; }
+  .hero { background: linear-gradient(160deg, #1a0533 0%, #0d0d1a 100%); padding: 28px 20px 24px; text-align: center; }
+  .app-icon { width: 90px; height: 90px; border-radius: 22px; margin: 0 auto 12px; overflow: hidden; box-shadow: 0 8px 32px rgba(124,58,237,0.5); border: 2px solid rgba(124,58,237,0.4); display: flex; align-items: center; justify-content: center; font-size: 46px; background: linear-gradient(135deg, #4c1d95, #831843); }
+  .app-name { font-size: 1.9rem; font-weight: 800; background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .app-dev { color: #a855f7; font-size: 0.82rem; margin-top: 4px; }
+  .ratings { display: flex; justify-content: center; gap: 28px; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.07); }
   .rating-item { text-align: center; }
-  .rating-item .val { font-size: 1.2rem; font-weight: 700; color: #fff; }
-  .rating-item .lbl { font-size: 0.7rem; color: #888; margin-top: 2px; }
-
-  .channels { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
-  .channel-card { background: #13131f; border: 1px solid #2a1550; border-radius: 16px; padding: 18px; }
-  .channel-card.beta { border-color: #1e3a5f; }
-  .channel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-  .channel-badge { padding: 4px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; }
+  .rating-item .val { font-size: 1.1rem; font-weight: 700; }
+  .rating-item .lbl { font-size: 0.68rem; color: #888; margin-top: 2px; }
+  .tab-bar { display: flex; gap: 8px; padding: 14px 16px 0; background: #0a0a0f; position: sticky; top: 57px; z-index: 99; border-bottom: 1px solid rgba(255,255,255,0.07); }
+  .tab-btn { flex: 1; padding: 10px; background: transparent; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px 12px 0 0; border-bottom: none; color: #888; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .tab-btn.active.stable { background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(219,39,119,0.2)); border-color: rgba(124,58,237,0.5); color: #fff; }
+  .tab-btn.active.beta { background: linear-gradient(135deg, rgba(29,78,216,0.2), rgba(8,145,178,0.2)); border-color: rgba(29,78,216,0.5); color: #fff; }
+  .tab-content { display: none; padding: 16px; }
+  .tab-content.active { display: block; }
+  .channel-card { background: #13131f; border: 1px solid rgba(124,58,237,0.25); border-radius: 16px; padding: 18px; }
+  .channel-card.beta { border-color: rgba(29,78,216,0.3); }
+  .channel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .channel-badge { padding: 5px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; }
   .stable-badge { background: linear-gradient(135deg, #7c3aed, #db2777); }
   .beta-badge { background: linear-gradient(135deg, #1d4ed8, #0891b2); }
-  .channel-version { font-size: 0.8rem; color: #888; }
-  .channel-info { display: flex; gap: 20px; margin-bottom: 14px; flex-wrap: wrap; }
+  .channel-version { font-size: 0.78rem; color: #666; background: rgba(255,255,255,0.05); padding: 3px 8px; border-radius: 6px; }
+  .channel-info { display: flex; gap: 16px; margin-bottom: 14px; flex-wrap: wrap; }
   .info-item { font-size: 0.78rem; color: #aaa; }
   .info-item span { color: #fff; font-weight: 600; }
-
-  .download-btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-top: 10px; }
+  .changelog { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 12px; margin-bottom: 14px; font-size: 0.8rem; color: #bbb; line-height: 1.7; }
+  .changelog-title { color: #a855f7; font-weight: 700; margin-bottom: 6px; font-size: 0.82rem; }
+  .download-btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
   .stable-btn { background: linear-gradient(135deg, #7c3aed, #db2777); color: #fff; }
   .beta-btn { background: linear-gradient(135deg, #1d4ed8, #0891b2); color: #fff; }
-  .download-btn:active { transform: scale(0.97); opacity: 0.9; }
+  .download-btn:active { transform: scale(0.97); }
   .download-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
   .progress-wrap { display: none; margin-top: 14px; }
-  .progress-bar-bg { background: #2a2a3a; border-radius: 10px; height: 10px; overflow: hidden; }
+  .progress-bar-bg { background: #1e1e2e; border-radius: 10px; height: 9px; overflow: hidden; }
   .progress-bar { height: 100%; border-radius: 10px; width: 0%; transition: width 0.2s ease; }
   .stable-progress { background: linear-gradient(90deg, #7c3aed, #db2777); }
   .beta-progress { background: linear-gradient(90deg, #1d4ed8, #0891b2); }
-  .progress-stats { display: flex; justify-content: space-between; margin-top: 8px; }
-  .progress-text { font-size: 0.75rem; color: #aaa; }
-  .speed-text { font-size: 0.75rem; color: #a855f7; font-weight: 600; }
-
-  .changelog { background: #0f0f1a; border-radius: 10px; padding: 12px; margin-top: 10px; font-size: 0.78rem; color: #aaa; line-height: 1.7; white-space: pre-wrap; }
-  .changelog-title { color: #a855f7; font-weight: 600; margin-bottom: 6px; font-size: 0.82rem; }
-
-  .features { padding: 0 20px 30px; }
-  .features h3 { font-size: 1rem; color: #a855f7; margin-bottom: 12px; }
-  .feature-list { display: flex; flex-direction: column; gap: 10px; }
-  .feature-item { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; color: #ccc; }
-  .feature-dot { width: 6px; height: 6px; border-radius: 50%; background: linear-gradient(135deg, #7c3aed, #db2777); flex-shrink: 0; }
-
+  .progress-stats { display: flex; justify-content: space-between; margin-top: 7px; }
+  .progress-text, .speed-text { font-size: 0.74rem; color: #aaa; }
+  .features { padding: 16px; margin-top: 4px; }
+  .features h3 { font-size: 0.95rem; color: #a855f7; margin-bottom: 12px; font-weight: 700; }
+  .feature-list { display: flex; flex-direction: column; gap: 9px; }
+  .feature-item { display: flex; align-items: center; gap: 10px; font-size: 0.83rem; color: #ccc; }
+  .feature-dot { width: 5px; height: 5px; border-radius: 50%; background: linear-gradient(135deg, #7c3aed, #db2777); flex-shrink: 0; }
   .loading { text-align: center; padding: 40px; color: #888; }
-  .spinner { width: 32px; height: 32px; border: 3px solid #2a1550; border-top-color: #a855f7; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
+  .spinner { width: 28px; height: 28px; border: 3px solid #1e1e2e; border-top-color: #a855f7; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  .no-release { text-align: center; padding: 30px; color: #666; font-size: 0.9rem; }
-  .error-msg { background: #1a0a0a; border: 1px solid #5f1a1a; border-radius: 12px; padding: 16px; text-align: center; color: #f87171; font-size: 0.85rem; margin: 10px 0; }
-  .retry-btn { margin-top: 10px; padding: 8px 20px; border: 1px solid #7c3aed; background: transparent; color: #a855f7; border-radius: 20px; font-size: 0.82rem; cursor: pointer; }
+  .no-release { text-align: center; padding: 40px 20px; color: #555; font-size: 0.9rem; }
+  .beta-warning { background: rgba(29,78,216,0.1); border: 1px solid rgba(29,78,216,0.3); border-radius: 10px; padding: 10px 14px; font-size: 0.78rem; color: #93c5fd; margin-bottom: 14px; }
 </style>
 </head>
 <body>
@@ -76,22 +68,27 @@
 </div>
 
 <div class="hero">
-  <div class="app-icon">
-    <img src="https://raw.githubusercontent.com/muwanindia345-beep/Luciagram-/main/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"
-      onerror="this.parentElement.innerHTML='<div class=\'app-icon-fallback\'>🦋</div>'"
-      alt="LuciaGram">
-  </div>
+  <div class="app-icon">🦋</div>
   <div class="app-name">LuciaGram</div>
   <div class="app-dev">by Lucia International Society</div>
   <div class="ratings">
     <div class="rating-item"><div class="val">4.8★</div><div class="lbl">Rating</div></div>
-    <div class="rating-item"><div class="val" id="dl-count">-</div><div class="lbl">Downloads</div></div>
-    <div class="rating-item"><div class="val" id="app-size">-</div><div class="lbl">Size</div></div>
+    <div class="rating-item"><div class="val" id="dl-count">—</div><div class="lbl">Downloads</div></div>
+    <div class="rating-item"><div class="val" id="app-size">—</div><div class="lbl">Size</div></div>
   </div>
 </div>
 
-<div class="channels" id="channels">
-  <div class="loading"><div class="spinner"></div>Loading releases...</div>
+<div class="tab-bar">
+  <button class="tab-btn stable active" onclick="switchTab('stable')">✅ Stable</button>
+  <button class="tab-btn beta" id="beta-tab-btn" onclick="switchTab('beta')">🧪 Beta</button>
+</div>
+
+<div class="tab-content active" id="tab-stable">
+  <div class="loading"><div class="spinner"></div>Loading...</div>
+</div>
+
+<div class="tab-content" id="tab-beta">
+  <div class="loading"><div class="spinner"></div>Loading...</div>
 </div>
 
 <div class="features">
@@ -109,189 +106,153 @@
 <script>
 let stableRelease = null;
 let betaRelease = null;
+let currentTab = 'stable';
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelector('.tab-btn.' + tab).classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
 
 async function loadReleases() {
-  const container = document.getElementById('channels');
-  container.innerHTML = '<div class="loading"><div class="spinner"></div>Loading releases...</div>';
   try {
     const res = await fetch('/api/releases');
     const releases = await res.json();
     if (!Array.isArray(releases)) throw new Error('Invalid response');
     stableRelease = releases.find(r => !r.prerelease) || null;
     betaRelease = releases.find(r => r.prerelease) || null;
-    renderChannels();
+    renderStable();
+    renderBeta();
   } catch (e) {
-    container.innerHTML = `
-      <div class="error-msg">
-        ❌ Failed to load releases<br>
-        <small>${e.message}</small><br>
-        <button class="retry-btn" onclick="loadReleases()">🔄 Retry</button>
-      </div>`;
+    document.getElementById('tab-stable').innerHTML = '<div class="no-release">❌ Failed to load. <button onclick="loadReleases()" style="background:none;border:1px solid #555;color:#aaa;padding:4px 10px;border-radius:6px;cursor:pointer;margin-top:8px">🔄 Retry</button></div>';
+    document.getElementById('tab-beta').innerHTML = '<div class="no-release">❌ Failed to load.</div>';
   }
 }
 
-function formatSize(bytes) {
-  if (!bytes) return '?';
-  return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+function formatSize(bytes) { return bytes ? (bytes/1024/1024).toFixed(1)+' MB' : '?'; }
+function formatSpeed(bps) {
+  if (bps > 1048576) return (bps/1048576).toFixed(1)+' MB/s';
+  if (bps > 1024) return (bps/1024).toFixed(0)+' KB/s';
+  return bps.toFixed(0)+' B/s';
+}
+function timeAgo(d) {
+  const diff = Date.now() - new Date(d);
+  const h = Math.floor(diff/3600000), day = Math.floor(diff/86400000);
+  if (h < 1) return 'Just now';
+  if (h < 24) return h+'h ago';
+  if (day === 1) return 'Yesterday';
+  return day+' days ago';
 }
 
-function timeAgo(dateStr) {
-  const diff = Date.now() - new Date(dateStr);
-  const days = Math.floor(diff / 86400000);
-  const hours = Math.floor(diff / 3600000);
-  if (hours < 1) return 'Just now';
-  if (hours < 24) return hours + 'h ago';
-  if (days === 1) return 'Yesterday';
-  return days + ' days ago';
+function renderStable() {
+  const el = document.getElementById('tab-stable');
+  if (!stableRelease) { el.innerHTML = '<div class="no-release">🚀 No stable release yet.</div>'; return; }
+  const apk = stableRelease.assets.find(a => a.name.endsWith('.apk'));
+  const size = formatSize(apk?.size);
+  const dlCount = (apk?.download_count || 0).toLocaleString();
+  document.getElementById('app-size').textContent = size;
+  document.getElementById('dl-count').textContent = dlCount;
+  el.innerHTML = `
+  <div class="channel-card">
+    <div class="channel-header">
+      <span class="channel-badge stable-badge">✅ STABLE</span>
+      <span class="channel-version">${stableRelease.tag_name}</span>
+    </div>
+    <div class="channel-info">
+      <div class="info-item">📦 Size: <span>${size}</span></div>
+      <div class="info-item">🕐 Updated: <span>${timeAgo(stableRelease.published_at)}</span></div>
+      <div class="info-item">⬇ Downloads: <span>${dlCount}</span></div>
+    </div>
+    <div class="changelog"><div class="changelog-title">📋 What's new</div>${stableRelease.body || 'Bug fixes and improvements.'}</div>
+    <button class="download-btn stable-btn" id="stable-btn" onclick="startDownload('stable',this)">⬇ Download Stable</button>
+    <div class="progress-wrap" id="stable-progress-wrap">
+      <div class="progress-bar-bg"><div class="progress-bar stable-progress" id="stable-bar"></div></div>
+      <div class="progress-stats"><div class="progress-text" id="stable-text"></div><div class="speed-text" id="stable-speed"></div></div>
+    </div>
+  </div>`;
 }
 
-function renderChannels() {
-  const container = document.getElementById('channels');
-  let html = '';
-
-  if (stableRelease) {
-    const apk = stableRelease.assets.find(a => a.name.endsWith('.apk'));
-    const size = apk ? formatSize(apk.size) : '?';
-    const dlCount = apk ? apk.download_count.toLocaleString() : '0';
-    document.getElementById('app-size').textContent = size;
-    document.getElementById('dl-count').textContent = dlCount;
-    html += `
-    <div class="channel-card">
-      <div class="channel-header">
-        <span class="channel-badge stable-badge">✅ STABLE</span>
-        <span class="channel-version">${stableRelease.tag_name}</span>
-      </div>
-      <div class="channel-info">
-        <div class="info-item">📦 Size: <span>${size}</span></div>
-        <div class="info-item">🕐 Updated: <span>${timeAgo(stableRelease.published_at)}</span></div>
-        <div class="info-item">⬇ Downloads: <span>${dlCount}</span></div>
-      </div>
-      <div class="changelog">
-        <div class="changelog-title">📋 What's new</div>
-        ${stableRelease.body || 'Bug fixes and improvements.'}
-      </div>
-      <button class="download-btn stable-btn" id="stable-btn" onclick="startDownload('stable', this)">⬇ Download Stable</button>
-      <div class="progress-wrap" id="stable-progress-wrap">
-        <div class="progress-bar-bg"><div class="progress-bar stable-progress" id="stable-bar"></div></div>
-        <div class="progress-stats">
-          <div class="progress-text" id="stable-text">Preparing...</div>
-          <div class="speed-text" id="stable-speed"></div>
-        </div>
-      </div>
-    </div>`;
-  }
-
-  if (betaRelease) {
-    const apk = betaRelease.assets.find(a => a.name.endsWith('.apk'));
-    const size = apk ? formatSize(apk.size) : '?';
-    html += `
-    <div class="channel-card beta">
-      <div class="channel-header">
-        <span class="channel-badge beta-badge">🧪 BETA</span>
-        <span class="channel-version">${betaRelease.tag_name}</span>
-      </div>
-      <div class="channel-info">
-        <div class="info-item">📦 Size: <span>${size}</span></div>
-        <div class="info-item">🕐 Updated: <span>${timeAgo(betaRelease.published_at)}</span></div>
-      </div>
-      <div class="changelog">
-        <div class="changelog-title">🧪 Beta changes</div>
-        ${betaRelease.body || 'Testing new features — may have bugs.'}
-      </div>
-      <button class="download-btn beta-btn" id="beta-btn" onclick="startDownload('beta', this)">🧪 Download Beta</button>
-      <div class="progress-wrap" id="beta-progress-wrap">
-        <div class="progress-bar-bg"><div class="progress-bar beta-progress" id="beta-bar"></div></div>
-        <div class="progress-stats">
-          <div class="progress-text" id="beta-text">Preparing...</div>
-          <div class="speed-text" id="beta-speed"></div>
-        </div>
-      </div>
-    </div>`;
-  }
-
-  container.innerHTML = html || '<div class="no-release">🚀 No releases yet. Check back soon!</div>';
+function renderBeta() {
+  const el = document.getElementById('tab-beta');
+  if (!betaRelease) { el.innerHTML = '<div class="no-release">🧪 No beta release yet.<br><small style="color:#555;margin-top:8px;display:block">Push to the beta branch to publish.</small></div>'; return; }
+  const apk = betaRelease.assets.find(a => a.name.endsWith('.apk'));
+  const size = formatSize(apk?.size);
+  el.innerHTML = `
+  <div class="beta-warning">⚠️ Beta builds may contain bugs. Use for testing only.</div>
+  <div class="channel-card beta">
+    <div class="channel-header">
+      <span class="channel-badge beta-badge">🧪 BETA</span>
+      <span class="channel-version">${betaRelease.tag_name}</span>
+    </div>
+    <div class="channel-info">
+      <div class="info-item">📦 Size: <span>${size}</span></div>
+      <div class="info-item">🕐 Updated: <span>${timeAgo(betaRelease.published_at)}</span></div>
+    </div>
+    <div class="changelog"><div class="changelog-title">🧪 Beta changes</div>${betaRelease.body || 'Testing new features.'}</div>
+    <button class="download-btn beta-btn" id="beta-btn" onclick="startDownload('beta',this)">🧪 Download Beta</button>
+    <div class="progress-wrap" id="beta-progress-wrap">
+      <div class="progress-bar-bg"><div class="progress-bar beta-progress" id="beta-bar"></div></div>
+      <div class="progress-stats"><div class="progress-text" id="beta-text"></div><div class="speed-text" id="beta-speed"></div></div>
+    </div>
+  </div>`;
 }
 
 async function startDownload(channel, btn) {
-  const wrap = document.getElementById(channel + '-progress-wrap');
-  const bar = document.getElementById(channel + '-bar');
-  const text = document.getElementById(channel + '-text');
-  const speed = document.getElementById(channel + '-speed');
-
+  const wrap = document.getElementById(channel+'-progress-wrap');
+  const bar = document.getElementById(channel+'-bar');
+  const text = document.getElementById(channel+'-text');
+  const speed = document.getElementById(channel+'-speed');
   wrap.style.display = 'block';
   btn.disabled = true;
   bar.style.width = '5%';
   text.textContent = 'Connecting...';
   speed.textContent = '';
-
-  let lastLoaded = 0;
-  let lastTime = Date.now();
-
+  let lastLoaded = 0, lastTime = Date.now();
   try {
-    const response = await fetch('/download/' + channel);
-    if (!response.ok) throw new Error('Server error ' + response.status);
-
-    const total = parseInt(response.headers.get('content-length') || 0);
+    const response = await fetch('/download/'+channel);
+    if (!response.ok) throw new Error('Server error '+response.status);
+    const total = parseInt(response.headers.get('content-length')||0);
     const reader = response.body.getReader();
     let loaded = 0;
     const chunks = [];
-
     text.textContent = 'Downloading...';
-
     while (true) {
-      const { done, value } = await reader.read();
+      const {done, value} = await reader.read();
       if (done) break;
       chunks.push(value);
       loaded += value.length;
-
-      // Speed calc
       const now = Date.now();
-      const timeDiff = (now - lastTime) / 1000;
-      if (timeDiff >= 0.5) {
-        const bytesPerSec = (loaded - lastLoaded) / timeDiff;
-        speed.textContent = formatSpeed(bytesPerSec);
-        lastLoaded = loaded;
-        lastTime = now;
+      if (now - lastTime >= 500) {
+        speed.textContent = formatSpeed((loaded-lastLoaded)/((now-lastTime)/1000));
+        lastLoaded = loaded; lastTime = now;
       }
-
       if (total > 0) {
-        const pct = Math.min(Math.round((loaded / total) * 100), 99);
-        bar.style.width = pct + '%';
-        text.textContent = `${pct}% — ${formatSize(loaded)} / ${formatSize(total)}`;
+        const pct = Math.min(Math.round(loaded/total*100), 99);
+        bar.style.width = pct+'%';
+        text.textContent = pct+'% — '+formatSize(loaded)+' / '+formatSize(total);
       } else {
-        text.textContent = `${formatSize(loaded)} downloaded`;
+        text.textContent = formatSize(loaded)+' downloaded';
         bar.style.width = '60%';
       }
     }
-
     bar.style.width = '100%';
     speed.textContent = '';
-    text.textContent = '💾 Saving file...';
-
-    const blob = new Blob(chunks, { type: 'application/vnd.android.package-archive' });
+    text.textContent = '💾 Saving...';
+    const blob = new Blob(chunks, {type:'application/vnd.android.package-archive'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
-    a.download = 'LuciaGram-' + channel + '.apk';
-    a.click();
+    a.href = url; a.download = 'LuciaGram-'+channel+'.apk'; a.click();
     URL.revokeObjectURL(url);
-
     text.textContent = '✅ Done! Check Downloads folder.';
     btn.disabled = false;
     btn.textContent = '✅ Downloaded';
-
-  } catch (e) {
-    text.textContent = '❌ Failed: ' + e.message;
-    speed.textContent = '';
-    bar.style.width = '0%';
+  } catch(e) {
+    text.textContent = '❌ Failed: '+e.message;
+    speed.textContent = ''; bar.style.width = '0%';
     btn.disabled = false;
   }
-}
-
-function formatSpeed(bps) {
-  if (bps > 1024 * 1024) return (bps / 1024 / 1024).toFixed(1) + ' MB/s';
-  if (bps > 1024) return (bps / 1024).toFixed(0) + ' KB/s';
-  return bps.toFixed(0) + ' B/s';
 }
 
 loadReleases();
