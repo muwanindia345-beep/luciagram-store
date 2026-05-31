@@ -86,6 +86,27 @@ app.get('/api/check-update', async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+app.get('/api/check-update', async (req, res) => {
+  try {
+    const { channel = 'stable', currentVersion = '' } = req.query;
+    const releases = await githubFetch('/repos/' + REPO + '/releases');
+    const isBeta = channel === 'beta';
+    const release = releases.find(r => r.prerelease === isBeta);
+    if (!release) return res.json({ hasUpdate: false });
+    const apk = release.assets.find(a => a.name.endsWith('.apk'));
+    const latestVersion = release.tag_name;
+    const hasUpdate = currentVersion !== latestVersion;
+    res.json({
+      hasUpdate,
+      latestVersion,
+      currentVersion,
+      size: apk ? (apk.size / 1024 / 1024).toFixed(1) + ' MB' : '',
+      changelog: release.body || 'Bug fixes and improvements.',
+      downloadUrl: '/download/' + channel,
+    });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
 app.get('/status', (req, res) => res.json({ app: 'LuciaStore', version: '2.0.0', ...bot.getReport() }));
 app.get('/', (req, res) => res.sendFile(__dirname + '/public/index.html'));
 
