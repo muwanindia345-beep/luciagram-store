@@ -11,6 +11,7 @@ const bot = new StoreUptimeBot();
 bot.start();
 
 const REPO = 'muwanindia345-beep/Luciagram-';
+const NATIVE_REPO = 'muwanindia345-beep/Luciagram-native';
 const RATINGS_FILE = './ratings.json';
 
 function loadRatings() {
@@ -28,7 +29,17 @@ async function githubFetch(path) {
 }
 
 app.get('/api/releases', async (req, res) => {
-  try { res.json(await githubFetch('/repos/' + REPO + '/releases')); }
+  try {
+    // Stable = Capacitor repo (manual releases)
+    // Beta = React Native repo (GitHub Actions)
+    const [stable, beta] = await Promise.all([
+      githubFetch('/repos/' + REPO + '/releases').catch(() => []),
+      githubFetch('/repos/' + NATIVE_REPO + '/releases').catch(() => []),
+    ]);
+    const stableRelease = stable.find(r => !r.prerelease) || null;
+    const betaRelease = beta.find(r => r) || null; // latest from native
+    res.json({ stableRelease, betaRelease });
+  }
   catch (err) { res.status(500).json({ error: err.message }); }
 });
 
@@ -49,9 +60,12 @@ app.post('/api/rating', (req, res) => {
 app.get('/download/:channel', async (req, res) => {
   try {
     const { default: fetch } = await import('node-fetch');
-    const releases = await githubFetch('/repos/' + REPO + '/releases');
     const isBeta = req.params.channel === 'beta';
-    const release = releases.find(r => r.prerelease === isBeta);
+    const repo = isBeta ? NATIVE_REPO : REPO;
+    const releases = await githubFetch('/repos/' + repo + '/releases');
+    const release = isBeta
+      ? releases[0]
+      : releases.find(r => !r.prerelease);
     const apk = release?.assets?.find(a => a.name.endsWith('.apk'));
     if (!apk) return res.status(404).json({ error: 'APK not found' });
     const apkRes = await fetch(apk.browser_download_url);
@@ -67,9 +81,10 @@ app.get('/download/:channel', async (req, res) => {
 app.get('/api/check-update', async (req, res) => {
   try {
     const { channel = 'stable', currentVersion = '' } = req.query;
-    const releases = await githubFetch('/repos/' + REPO + '/releases');
     const isBeta = channel === 'beta';
-    const release = releases.find(r => r.prerelease === isBeta);
+    const repo = isBeta ? NATIVE_REPO : REPO;
+    const releases = await githubFetch('/repos/' + repo + '/releases');
+    const release = isBeta ? releases[0] : releases.find(r => !r.prerelease);
     if (!release) return res.json({ hasUpdate: false });
     const apk = release.assets.find(a => a.name.endsWith('.apk'));
     const latestVersion = release.tag_name;
@@ -89,9 +104,10 @@ app.get('/api/check-update', async (req, res) => {
 app.get('/api/check-update', async (req, res) => {
   try {
     const { channel = 'stable', currentVersion = '' } = req.query;
-    const releases = await githubFetch('/repos/' + REPO + '/releases');
     const isBeta = channel === 'beta';
-    const release = releases.find(r => r.prerelease === isBeta);
+    const repo = isBeta ? NATIVE_REPO : REPO;
+    const releases = await githubFetch('/repos/' + repo + '/releases');
+    const release = isBeta ? releases[0] : releases.find(r => !r.prerelease);
     if (!release) return res.json({ hasUpdate: false });
     const apk = release.assets.find(a => a.name.endsWith('.apk'));
     const latestVersion = release.tag_name;
